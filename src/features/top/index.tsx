@@ -1,16 +1,21 @@
 import { Center } from "@/components/common/center";
 import { Content } from "@/components/common/content";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FundPrice } from "../types";
 import { PrimaryButton } from "@/components/button/primary-button";
 import styles from "./top.module.scss";
 import { Loading } from "@/components/common/loading";
 import { FundPriceItem } from "./item";
+import { Modal } from "@/components/modal/modal";
+import CreateFundPriceForm from "./create-price-form";
 
 const TopComponent = () => {
   const [fundPrices, setFundPrices] = useState<FundPrice[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [showAddModal, setAddModal] = useState(false);
+  const ShowAddModal = useCallback(() => setAddModal(true), []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,7 +46,16 @@ const TopComponent = () => {
       <div className={styles.top}>
         <Center>
           <h2>日本の投資信託価格一覧</h2>
-          <PrimaryButton content="新規追加" className="mb-3" />
+          <PrimaryButton
+            content="新規追加"
+            className="mb-3"
+            onClick={ShowAddModal}
+          />
+          <Modal
+            showFlag={showAddModal}
+            setShowModal={setAddModal}
+            content={<CreateFundPriceForm />}
+          />
         </Center>
         {fundPrices.map((fundPrice) => (
           <FundPriceItem key={fundPrice.ID} fundPrice={fundPrice} />
