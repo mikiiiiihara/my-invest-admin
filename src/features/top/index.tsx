@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { FundPrice } from "../types";
 import { PrimaryButton } from "@/components/button/primary-button";
 import styles from "./top.module.scss";
+import { Loading } from "@/components/common/loading";
+import { FundPriceItem } from "./item";
 
 const TopComponent = () => {
   const [fundPrices, setFundPrices] = useState<FundPrice[]>([]);
@@ -15,7 +17,7 @@ const TopComponent = () => {
       try {
         // ここでREST APIエンドポイントを指定します。
         const response = await fetch(
-          "http://localhost:8081/api/v1/admin/fund-prices"
+          `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/fund-prices`
         );
         if (!response.ok) {
           throw new Error(`Error: ${response.status}`);
@@ -31,20 +33,18 @@ const TopComponent = () => {
 
     fetchData();
   }, []);
+
+  if (loading) return <Loading />;
+  if (error) return <p>Error: {error}</p>;
   return (
     <Content>
       <div className={styles.top}>
         <Center>
-          <h2>日本の投資信託価格一覧</h2>{" "}
+          <h2>日本の投資信託価格一覧</h2>
+          <PrimaryButton content="新規追加" className="mb-3" />
         </Center>
         {fundPrices.map((fundPrice) => (
-          <div key={fundPrice.ID} className={styles.fundPrices}>
-            <p>{fundPrice.Name}</p>
-            <div className={styles.fundPriceContainer}>
-              <p>価格：¥{fundPrice.Price.toLocaleString()}</p>
-              <PrimaryButton content="編集" className="mb-3" />
-            </div>
-          </div>
+          <FundPriceItem key={fundPrice.ID} fundPrice={fundPrice} />
         ))}
       </div>
     </Content>
