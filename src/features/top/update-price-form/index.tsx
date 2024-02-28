@@ -48,15 +48,18 @@ const UpdatePriceFormComponent: FC<Props> = ({ fundPrice }) => {
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <p>価格を編集</p>
+        <center><h3>価格を編集</h3></center>
+        <label htmlFor="name">銘柄名：</label>
+        <p>{fundPrice.Name}</p>
         <label htmlFor="price">価格：</label>
         <input
           id="price"
           type="number"
+          className="mb-3"
           value={price}
           onChange={(e) => setPrice(Number(e.target.value))}
         />
-        <PrimaryButton type="submit" className="mb-3" content="更新" />
+        <PrimaryButton type="submit" className="mb-3 w-100" content="更新" />
       </div>
     </form>
   );
