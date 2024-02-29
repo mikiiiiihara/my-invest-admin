@@ -49,12 +49,13 @@ const CreateFundPriceForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <p>新規追加</p>
+      <h3>新規追加</h3>
       <div>
         <label htmlFor="name">名前：</label>
         <input
           id="name"
           type="text"
+          className="mb-3 w-100"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
@@ -64,6 +65,7 @@ const CreateFundPriceForm = () => {
         <input
           id="code"
           type="text"
+          className="mb-3 w-100"
           value={code}
           onChange={(e) => setCode(e.target.value)}
         />
@@ -73,11 +75,12 @@ const CreateFundPriceForm = () => {
         <input
           id="price"
           type="text" // 価格は数値入力が想定されるが、フォーマット検証などが必要になる場合もあるため、ここではtype="text"としています。
+          className="mb-3 w-100"
           value={price}
           onChange={(e) => setPrice(e.target.value)}
         />
       </div>
-      <PrimaryButton type="submit" content="追加" />
+      <PrimaryButton type="submit" className="mb-3 w-100" content="追加" />
     </form>
   );
 };
