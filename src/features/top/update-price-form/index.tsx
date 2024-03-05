@@ -4,46 +4,15 @@ import { FundPrice } from "@/features/types";
 
 type Props = {
   fundPrice: FundPrice;
+  updateFundPrice: (id: number, price: number) => Promise<void>;
 };
 
-const UpdatePriceFormComponent: FC<Props> = ({ fundPrice }) => {
+const UpdatePriceFormComponent: FC<Props> = ({ fundPrice, updateFundPrice }) => {
   const [price, setPrice] = useState(fundPrice.Price);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault(); // デフォルトのフォーム送信を防ぐ
-
-    // 更新するデータの準備
-    const data = {
-      id: fundPrice.ID,
-      price: price,
-    };
-
-    // APIエンドポイントのURL
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/fund-prices`;
-
-    try {
-      // PUTリクエストの送信
-      const response = await fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      // レスポンスの処理
-      const result = await response.json();
-      console.log("サーバーからのレスポンス: ", result);
-      // 成功した場合の処理をここに記述（例: 状態更新、通知表示など）
-      alert("更新しました！");
-    } catch (error) {
-      console.error("PUTリクエストエラー: ", error);
-      // エラー処理をここに記述
-    }
+    await updateFundPrice(fundPrice.ID, price); 
   };
   return (
     <form onSubmit={handleSubmit}>

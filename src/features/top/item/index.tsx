@@ -7,9 +7,10 @@ import { UpdatePriceForm } from "../update-price-form";
 
 type Props = {
   fundPrice: FundPrice;
+  updateFundPrice: (id: number, price: number) => Promise<void>;
 };
 
-const FundPriceItemComponent: FC<Props> = ({ fundPrice }) => {
+const FundPriceItemComponent: FC<Props> = ({ fundPrice,updateFundPrice }) => {
   const [showUpdModal, setUpdModal] = useState(false);
   const ShowUpdModal = useCallback(() => setUpdModal(true), []);
   return (
@@ -22,7 +23,7 @@ const FundPriceItemComponent: FC<Props> = ({ fundPrice }) => {
       <Modal
         showFlag={showUpdModal}
         setShowModal={setUpdModal}
-        content={<UpdatePriceForm fundPrice={fundPrice} />}
+        content={<UpdatePriceForm fundPrice={fundPrice} updateFundPrice={updateFundPrice}/>}
       />
     </div>
   );

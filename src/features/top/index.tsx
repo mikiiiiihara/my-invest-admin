@@ -1,43 +1,18 @@
-import { Center } from "@/components/common/center";
-import { Content } from "@/components/common/content";
-import React, { useCallback, useEffect, useState } from "react";
-import { FundPrice } from "../types";
+import React, { useCallback, useState } from "react";
 import { PrimaryButton } from "@/components/button/primary-button";
-import styles from "./top.module.scss";
+import { Content } from "@/components/common/content";
+import { Center } from "@/components/common/center";
 import { Loading } from "@/components/common/loading";
-import { FundPriceItem } from "./item";
 import { Modal } from "@/components/modal/modal";
 import CreateFundPriceForm from "./create-price-form";
+import { FundPriceItem } from "./item";
+import styles from "./top.module.scss";
+import { useFundPrices } from "@/hooks/use-fund-prices";
 
 const TopComponent = () => {
-  const [fundPrices, setFundPrices] = useState<FundPrice[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
+  const { fundPrices, loading, error, updateFundPrice } = useFundPrices();
   const [showAddModal, setAddModal] = useState(false);
   const ShowAddModal = useCallback(() => setAddModal(true), []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // ここでREST APIエンドポイントを指定します。
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/fund-prices`
-        );
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status}`);
-        }
-        const result: FundPrice[] = await response.json();
-        setFundPrices(result);
-      } catch (error: any) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   if (loading) return <Loading />;
   if (error) return <p>Error: {error}</p>;
@@ -58,11 +33,12 @@ const TopComponent = () => {
           />
         </Center>
         {fundPrices.map((fundPrice) => (
-          <FundPriceItem key={fundPrice.ID} fundPrice={fundPrice} />
+          <FundPriceItem key={fundPrice.ID} fundPrice={fundPrice} updateFundPrice={updateFundPrice}/>
         ))}
       </div>
     </Content>
   );
 };
+
 TopComponent.displayName = "TopTemplate";
 export const TopTemplate = React.memo(TopComponent);
