@@ -4,13 +4,13 @@ import { Content } from "@/components/common/content";
 import { Center } from "@/components/common/center";
 import { Loading } from "@/components/common/loading";
 import { Modal } from "@/components/modal/modal";
-import CreateFundPriceForm from "./create-price-form";
 import { FundPriceItem } from "./item";
 import styles from "./top.module.scss";
 import { useFundPrices } from "@/hooks/use-fund-prices";
+import { CreateFundPriceForm } from "./create-price-form";
 
 const TopComponent = () => {
-  const { fundPrices, loading, error, updateFundPrice } = useFundPrices();
+  const { fundPrices, loading, error, updateFundPrice, createFundPrice } = useFundPrices();
   const [showAddModal, setAddModal] = useState(false);
   const ShowAddModal = useCallback(() => setAddModal(true), []);
 
@@ -29,7 +29,7 @@ const TopComponent = () => {
           <Modal
             showFlag={showAddModal}
             setShowModal={setAddModal}
-            content={<CreateFundPriceForm />}
+            content={<CreateFundPriceForm createFundPrice={createFundPrice}/>}
           />
         </Center>
         {fundPrices.map((fundPrice) => (

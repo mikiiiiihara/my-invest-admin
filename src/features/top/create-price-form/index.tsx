@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import { PrimaryButton } from "@/components/button/primary-button";
 
-const CreateFundPriceForm = () => {
+type Props = {
+  createFundPrice: (name: string, code: string, price: number) => Promise<void>
+}
+
+const CreateFundPriceFormComponent: FC<Props> = ({ createFundPrice }) => {
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
   const [price, setPrice] = useState("");
@@ -15,36 +19,8 @@ const CreateFundPriceForm = () => {
       console.error("全てのフィールドを入力してください。");
       return; // バリデーションエラーがあればここで処理を終了
     }
-
-    const data = {
-      name: name,
-      code: code,
-      price: parseFloat(price), // 文字列から数値への変換
-    };
-
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/fund-prices`;
-
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      console.log("サーバーからのレスポンス: ", result);
-      // 成功した場合の処理をここに記述（例: 状態のリセット、成功通知など）
-      alert("追加しました！");
-    } catch (error) {
-      console.error("POSTリクエストエラー: ", error);
-      // エラー処理をここに記述
-    }
+    // 新規追加処理
+    await createFundPrice(name,code,parseFloat(price));// 文字列から数値への変換
   };
 
   return (
@@ -85,4 +61,5 @@ const CreateFundPriceForm = () => {
   );
 };
 
-export default CreateFundPriceForm;
+CreateFundPriceFormComponent.displayName = "CreateFundPriceForm";
+export const CreateFundPriceForm = React.memo(CreateFundPriceFormComponent);

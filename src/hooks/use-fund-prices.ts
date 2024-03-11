@@ -27,6 +27,9 @@ export const useFundPrices = () => {
     fetchData();
   }, []);
 
+  /**
+   * 投資信託情報を更新
+   */
   const updateFundPrice = useCallback(async (id: number, price: number) => {
     const data = { id, price };
     const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/fund-prices`;
@@ -57,5 +60,36 @@ export const useFundPrices = () => {
     }
   }, []);
 
-  return { fundPrices, loading, error, updateFundPrice };
+  /**
+   * 投資信託情報を新規追加
+   */
+  const createFundPrice = useCallback(async (name: string, code: string, price: number) => {
+    const data = { name, code, price };
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/fund-prices`;
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // レスポンスを受け取った後、ローカル状態を更新する
+      const newFundPrice: FundPrice = await response.json();
+      setFundPrices(currentPrices =>
+        [...currentPrices, newFundPrice]
+      );
+      alert("追加しました！");
+    } catch (error) {
+      console.error("POSTリクエストエラー: ", error);
+    }
+  }, []);
+
+  return { fundPrices, loading, error, updateFundPrice, createFundPrice };
 };
